@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Rol {
+  ADMINISTRATOR
+  SHIELD
+  SUPERVISOR
+  VALIDATOR
+}
+
+enum Shift {
+  MANANA
+  TARDE
+  NOCHE
+  UNDEFINED
+  ROTATIVO
+}
+
+enum Status {
+  PENDIENTE
+  APROBADO
+  RECHAZADO
+  EN_REVISION
+}
+
+model Incidencias {
+  id                        String                      @id @default(uuid())
+  unidad_id                 Int?
+  tipo_caso_id              Int?
+  sub_tipo_caso_id          Int?
+  tipo_reportante_id        Int?
+  telefono_reportante       String?                     @db.VarChar(255)
+  cargo_sereno_id           Int?
+  nombre_reportante         String?                     @db.VarChar(255)
+  sereno_id                 Int?
+  direccion                 String?
+  latitud                   String?                     @db.VarChar(255)
+  longitud                  String?                     @db.VarChar(255)
+  jurisdiccion_id           Int
+  descripcion               String?
+  fecha_registro            DateTime?                   @db.Date
+  hora_registro             DateTime?                   @db.Time(6)
+  fecha_ocurrencia          DateTime?                   @db.Date
+  hora_ocurrencia           DateTime?                   @db.Time(6)
+  estado_proceso_id         Int?
+  genero_agresor_id         Int?
+  genero_victima_id         Int?
+  severidad_proceso_id      Int?
+  severidad_id              Int?
+  medio_id                  Int?
+  situacion_id              Int?
+  operador_id               Int?
+  motivo                    String?                     @db.VarChar(255)
+  fotos                     String[]                    @db.VarChar(255)
+  codigo_incidencia         String?                     @db.VarChar(255)
+  estado                    Status
+  isDeleted                 Boolean                     @default(false)
+  convertidaAIncidencia     Boolean                     @default(false)
+  createdAt                 DateTime                    @db.Timestamptz(6)
+  updatedAt                 DateTime                    @db.Timestamptz(6)
+  user_id                   String                      @default("1") @db.VarChar(255)
+  turno                     Shift
+  locked_by                 Int?
+  socket_id                 String?                     @db.VarChar(255)
+  observacion               String?                     @db.VarChar(255)
+  doneAt                    DateTime?
+  registerAt                DateTime?
+}
+
+model JurisdiccionesApto {
+  id                        String                      @id @default(uuid())
+  jurisdiccion_id           Int?
+  nombre                    String?                     @db.VarChar(255)
+  estado                    Boolean                     @default(true)
+  createdAt                 DateTime                    @db.Timestamptz(6)
+  updatedAt                 DateTime                    @db.Timestamptz(6)
+}
+
+model User {
+  id                        String                      @id @default(uuid())
+  name                      String?                     @db.VarChar(255)
+  lastname                  String?                     @db.VarChar(255)
+  email                     String?                     @unique @db.VarChar(255)
+  password                  String?                     @db.VarChar(255)
+  rol                       Rol
+  shift                     Shift                       @default(MANANA)
+  incidenceId               Int?
+  shieldId                  Int?
+  observation               String?                     @db.VarChar(255)
+  createdAt                 DateTime                    @db.Timestamptz(6)
+  updatedAt                 DateTime                    @db.Timestamptz(6)
+  deletedAt                 DateTime?                   @db.Timestamptz(6)
+}
