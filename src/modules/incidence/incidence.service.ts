@@ -285,7 +285,10 @@ export class IncidenceService {
     if (fecha_ocurrencia && hora_ocurrencia)
       doneAt = timezoneHelperFromDateTime(fecha_ocurrencia, hora_ocurrencia);
     else doneAt = incidence.doneAt;
-    const meanId = incidence.medio_id ?? 3;
+    const meanId = dto.medio_id ?? incidence.medio_id;
+    if (!meanId) {
+      throw new BadRequestException('Debes seleccionar un medio');
+    }
     const meanCode = await this.processService.getMeanCodeById(meanId);
     const year = getYear();
     const lastCode = await this.sql.query(
