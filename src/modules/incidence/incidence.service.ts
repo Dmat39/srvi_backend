@@ -310,7 +310,7 @@ export class IncidenceService {
       const [, correlativo] = lastIncidenceCode.split(year);
       newNumber = Number(correlativo) + 1;
     }
-    const codeString = `${meanCode}${year}${newNumber.toString().padStart(6, '0')}`;
+    const codeString = `${meanCode}${year}${newNumber.toString().padStart(5, '0')}`;
     const incidenceRegistered = await this.sql.query(
       `
         INSERT INTO incidencias (
