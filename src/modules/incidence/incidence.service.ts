@@ -291,17 +291,19 @@ export class IncidenceService {
     }
     const meanCode = await this.processService.getMeanCodeById(meanId);
     const year = getYear();
+    const date = timezoneHelper();
+
+    const pattern = `${meanCode}${year}%`;
     const lastCode = await this.sql.query(
       `
         SELECT "codigoIncidencia" AS codigo_incidencia
         FROM incidencias
-        WHERE "codigoIncidencia" LIKE @code || @year || '%'
+        WHERE "codigoIncidencia" LIKE @pattern
         ORDER BY "codigoIncidencia" DESC
         LIMIT 1
       `,
-      { code: meanCode, year },
+      { pattern },
     );
-    const date = timezoneHelper();
     let newNumber = 1;
     if (lastCode.length > 0) {
       const lastIncidenceCode = lastCode[0].codigo_incidencia;
